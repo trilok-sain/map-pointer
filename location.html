@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Location Permission - Washroom Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6 text-center">
+    <h1 class="text-2xl font-semibold mb-6 text-green-700">Allow Location Access?</h1>
+    <p class="mb-6 text-green-700">We need your location to show nearby washrooms within 5 km.</p>
+    <div class="space-x-4">
+      <button id="allow-btn" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition">Allow</button>
+      <button id="deny-btn" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition">Deny</button>
+    </div>
+    <p id="status-msg" class="mt-4 text-red-600 hidden"></p>
+  </div>
+
+
+  <script>
+    const allowBtn = document.getElementById('allow-btn');
+    const denyBtn = document.getElementById('deny-btn');
+    const statusMsg = document.getElementById('status-msg');
+
+
+    allowBtn.addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // Save permission granted flag in localStorage
+            localStorage.setItem('locationPermission', 'granted');
+            // Redirect to main page
+            window.location.href = 'main.html';
+          },
+          (error) => {
+            statusMsg.textContent = 'Location access denied or unavailable.';
+            statusMsg.classList.remove('hidden');
+          }
+        );
+      } else {
+        statusMsg.textContent = 'Geolocation is not supported by your browser.';
+        statusMsg.classList.remove('hidden');
+      }
+    });
+
+
+    denyBtn.addEventListener('click', () => {
+      localStorage.setItem('locationPermission', 'denied');
+      statusMsg.textContent = 'Location access denied. You can still use the app but location features will be limited.';
+      statusMsg.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
+
+
+
